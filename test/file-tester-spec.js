@@ -93,12 +93,12 @@ describe('FileTester', function () {
 
       it('should fail if expected substring not in the contents', function (done) {
         var file = createFile('foo.txt', 'Hello, earth!');
-        tester.test(file, done.expectFail('not contain "world"'));
+        tester.test(file, done.expectFail('not containing "world"'));
       });
 
       it('should fail if expected RegExp pattern not matches the contents', function (done) {
         var file = createFile('bar.txt', 'Bye, world!');
-        tester.test(file, done.expectFail('not match against /^hello/i'));
+        tester.test(file, done.expectFail('not matching /^hello/i'));
       });
     });
 
@@ -115,19 +115,19 @@ describe('FileTester', function () {
 
       it('should fail if expected substring not in the contents', function (done) {
         var file = createFile('foo.txt', ['Hel', 'lo, ', 'ear', 'th!']);
-        tester.test(file, done.expectFail('not contain "world"'));
+        tester.test(file, done.expectFail('not containing "world"'));
       });
 
       it('should fail if expected RegExp pattern not matches the contents', function (done) {
         var file = createFile('bar.txt', ['Bye', ', ', 'wor', 'ld!']);
-        tester.test(file, done.expectFail('not match against /^hello/i'));
+        tester.test(file, done.expectFail('not matching /^hello/i'));
       });
     });
 
     context('when contents is null', function () {
       it('should fail', function (done) {
         var file = createFile('foo.txt');
-        tester.test(file, done.expectFail('The file is not read'));
+        tester.test(file, done.expectFail('not read'));
       });
     });
   });
@@ -156,7 +156,7 @@ describe('FileTester', function () {
     it('should fail if the file not exists', function (done) {
       var tester = new FileTester('notexists.txt', { checkRealFile: true });
       var file = createFile('nonexists.txt');
-      tester.test(file, done.expectFail('not exists on filesystem'));
+      tester.test(file, done.expectFail('not on filesystem'));
     });
   });
 

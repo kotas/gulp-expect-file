@@ -1,12 +1,15 @@
 'use strict';
 
 var FileTester = require('./lib/file-tester');
+var ExpectationError = require('./lib/errors').ExpectationError;
 var gutil = require('gulp-util');
 var through = require('through2');
 var xtend = require('xtend');
 var color = gutil.colors;
 
-module.exports = function (options, expectation) {
+module.exports = expect;
+
+function expect(options, expectation) {
   if (!expectation) {
     expectation = options;
     options = {};
@@ -19,7 +22,7 @@ module.exports = function (options, expectation) {
     reportUnexpected: true,
     reportMissing: true,
     checkRealFile: false,
-    errorOnFailure: true,
+    errorOnFailure: false,
     silent: false,
     verbose: false
   }, options);
@@ -40,12 +43,14 @@ module.exports = function (options, expectation) {
 
     var _this = this;
     fileTester.test(file, function (err) {
-      if (err && err.message === 'unexpected' && !options.reportUnexpected) {
-        err = null;
+      if (err && !options.reportUnexpected) {
+        if (err instanceof ExpectationError && err.message === 'unexpected') {
+          err = null;
+        }
       }
       if (err) {
         numFailures++;
-        reportFailure(file, err, emitError.bind(_this));
+        reportFailure(file, err);
       } else {
         numPasses++;
         reportPassing(file);
@@ -64,29 +69,35 @@ module.exports = function (options, expectation) {
         numPasses++;
       } else {
         numFailures++;
-        reportMissing(unusedRules, emitError.bind(this));
+        reportMissing(unusedRules);
       }
     }
 
     reportSummary();
+
+    if (numFailures > 0 && options.errorOnFailure) {
+      this.emit('error', new gutil.PluginError('gulp-expect-file', 'Failed ' + numFailures + ' expectations'));
+    }
+
     numTests = numPasses = numFailures = 0;
     done();
   }
 
-
-  function emitError(message) {
-    if (options.errorOnFailure) {
-      this.emit('error', new gutil.PluginError('gulp-expect-file', message));
+  function reportFailure(file, err) {
+    if (err instanceof ExpectationError) {
+      options.silent || gutil.log(
+        color.red("\u2717 FAIL:"),
+        color.magenta(file.relative),
+        'is',
+        err.message
+      );
+    } else {
+      options.silent || gutil.log(
+        color.red("\u2717 ERROR:"),
+        color.magenta(file.relative) + ':',
+        (err.message || err)
+      );
     }
-  };
-
-  function reportFailure(file, err, emitter) {
-    options.silent || gutil.log(
-      color.red("\u2717 FAIL:"),
-      color.magenta(file.relative),
-      (err.message || err)
-    );
-    emitter('Expectation failed: ' + file.relative + ' ' + (err.message || err));
   }
 
   function reportPassing(file) {
@@ -98,7 +109,7 @@ module.exports = function (options, expectation) {
     }
   }
 
-  function reportMissing(rules, emitter) {
+  function reportMissing(rules) {
     var missings = rules.map(function (r) { return r.toString() }).join(', ');
     if (!options.silent) {
       gutil.log(
@@ -109,7 +120,6 @@ module.exports = function (options, expectation) {
         color.magenta(missings)
       );
     }
-    emitter('Missing ' + rules.length + ' expected files: ' + missings);
   }
 
   function reportSummary() {

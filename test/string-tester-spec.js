@@ -11,7 +11,7 @@ describe('StringTester', function () {
     });
 
     it('should fail if not containing the string', function (done) {
-      tester.test('fofofofo', done.expectFail('not contain "foo"'));
+      tester.test('fofofofo', done.expectFail('not containing "foo"'));
     });
   });
 
@@ -23,7 +23,7 @@ describe('StringTester', function () {
     });
 
     it('should fail if not matching the pattern', function (done) {
-      tester.test('bazbarfoo', done.expectFail('not match against /^foo/'));
+      tester.test('bazbarfoo', done.expectFail('not matching /^foo/'));
     });
   });
 
@@ -44,7 +44,7 @@ describe('StringTester', function () {
       if (s === 'foo') {
         callback();
       } else {
-        callback(new Error('not foo'));
+        callback('not foo');
       }
     });
 
@@ -65,7 +65,7 @@ describe('StringTester', function () {
     });
 
     it('should fail if not containing some of them', function (done) {
-      tester.test('foobar', done.expectFail('not contain "baz"'));
+      tester.test('foobar', done.expectFail('not containing "baz"'));
     });
   });
 
@@ -77,7 +77,7 @@ describe('StringTester', function () {
     });
 
     it('should fail if not matching some of them', function (done) {
-      tester.test('foobazbar', done.expectFail('not match against /baz$/'));
+      tester.test('foobazbar', done.expectFail('not matching /baz$/'));
     });
   });
 

@@ -26,7 +26,7 @@ describe('StreamTester', function () {
     });
 
     it('fails if a stream not contains the string', function (done) {
-      tester.test(stream, done.expectFail('not contain "bar"'));
+      tester.test(stream, done.expectFail('not containing "bar"'));
       stream.write('babababa');
       stream.end();
     });

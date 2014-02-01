@@ -2,6 +2,7 @@ var gutil = require('gulp-util');
 var temp = require('temp');
 var path = require('path');
 var es = require('event-stream');
+var ExpectationError = require('../lib/errors').ExpectationError;
 
 module.exports.should = require('should');
 
@@ -9,9 +10,13 @@ Function.prototype.expectFail = function (expectedError) {
   var _this = this;
   return function (err) {
     if (err) {
+      if (!(err instanceof ExpectationError)) {
+        return _this(err);
+      }
+
       if (expectedError) {
         try {
-          var message = err.message || err;
+          var message = err.message;
           if (typeof expectedError === 'string') {
             message.should.equal(expectedError);
           } else if (typeof expectedError === 'function') {
@@ -26,7 +31,7 @@ Function.prototype.expectFail = function (expectedError) {
       }
       _this();
     } else {
-      _this(new Error('Testing should fail'));
+      _this(new Error('Expectation should fail'));
     }
   };
 };
@@ -65,35 +70,29 @@ module.exports.createTemporaryFile = function (callback) {
   });
 };
 
+gutil.log.capture = function () {
+  if (gutil.log.captured) return;
 
-gutil.log.capture = function (block, callback) {
-  var logs = [];
-  var cleaned = false;
+  var logs = '';
+  var expectedPatterns = [];
 
   var original = gutil.log;
   gutil.log = function () {
     var args = Array.prototype.slice.call(arguments);
     var log = args.map(function (arg) { return arg.toString() }).join(' ');
     log = gutil.colors.stripColor(log);
-    logs.push(log);
+    logs += log + '\n';
     return this;
   };
-
-  var cleanUp = function (error) {
-    if (cleaned) return;
+  gutil.log.captured = true;
+  gutil.log.restore = function () {
     gutil.log = original;
-    cleaned = true;
-    callback && callback(error, logs);
-  };
 
-  try {
-    if (block.length === 0) {
-      block();
-      cleanUp();
-    } else {
-      block(cleanUp);
-    }
-  } catch (e) {
-    cleanUp(e);
-  }
+    expectedPatterns.forEach(function (pattern) {
+      logs.should.match(pattern);
+    });
+  };
+  gutil.log.expect = function (pattern) {
+    expectedPatterns.push(pattern);
+  };
 };
