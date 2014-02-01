@@ -140,4 +140,37 @@ describe('gulp-expect-file', function () {
     });
   });
 
+  describe('.real', function () {
+    var tempFile, tester;
+
+    before(function (done) {
+      helper.createTemporaryFile(function (err, file) {
+        if (err) return done(err);
+        tempFile = file;
+        done();
+      });
+    });
+
+    after(function () {
+      tempFile && tempFile.cleanup();
+      tempFile = null;
+    });
+
+    it('tests if the files exists on file system', function (done) {
+      gutil.log.expect(/PASS/);
+      var stream = expect.real([tempFile.relative]);
+      testStream(stream, done);
+      stream.write(tempFile);
+      stream.end();
+    });
+
+    it('should report if the file does not exists', function (done) {
+      gutil.log.expect(/FAIL: nonexists\.txt is not on filesystem/);
+      var stream = expect.real(['nonexists.txt']);
+      testStream(stream, done);
+      stream.write(createFile('nonexists.txt'));
+      stream.end();
+    });
+  });
+
 });

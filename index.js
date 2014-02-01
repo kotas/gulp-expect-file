@@ -9,6 +9,15 @@ var color = gutil.colors;
 
 module.exports = expect;
 
+module.exports.real = function (options, expectation) {
+  if (!expectation) {
+    expectation = options;
+    options = {};
+  }
+  options = xtend({ checkRealFile: true }, options);
+  return expect(options, expectation);
+};
+
 function expect(options, expectation) {
   if (!expectation) {
     expectation = options;
