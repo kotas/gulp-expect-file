@@ -18,13 +18,14 @@ module.exports = function (options, expectation) {
   options = xtend({
     reportUnexpected: true,
     reportMissing: true,
+    checkRealFile: false,
     errorOnFailure: true,
     silent: false,
     verbose: false
-  }, options || {});
+  }, options);
 
   try {
-    var fileTester = new FileTester(expectation);
+    var fileTester = new FileTester(expectation, options);
   } catch (e) {
     throw new gutil.PluginError('gulp-expect-file', e.message || e);
   }

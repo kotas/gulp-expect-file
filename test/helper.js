@@ -1,4 +1,6 @@
 var gutil = require('gulp-util');
+var temp = require('temp');
+var path = require('path');
 
 module.exports.should = require('should');
 
@@ -39,6 +41,26 @@ module.exports.createFile = function (relpath, contents) {
     contents: contents ? contents : null
   });
 };
+
+module.exports.createTemporaryFile = function (callback) {
+  temp.track();
+  temp.open('gulp-expect-file', function (err, info) {
+    if (err) return callback(err, null);
+
+    var file = new gutil.File({
+      cwd: path.dirname(info.path),
+      base: path.dirname(info.path),
+      path: info.path,
+      contents: null
+    });
+    file.cleanup = function () {
+      temp.cleanup();
+    };
+
+    callback(null, file);
+  });
+};
+
 
 gutil.log.capture = function (block, callback) {
   var logs = [];

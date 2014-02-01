@@ -1,6 +1,7 @@
 var helper = require('./helper');
 var createFile = helper.createFile;
 var FileTester = require('../lib/file-tester');
+var gutil = require('gulp-util');
 
 describe('FileTester', function () {
 
@@ -97,6 +98,34 @@ describe('FileTester', function () {
     it('should fail if expected RegExp pattern not matches the contents', function (done) {
       var file = createFile('bar.txt', 'Bye, world!');
       tester.test(file, done.expectFail('not match against /^hello/i'));
+    });
+  });
+
+  context('with checking real file', function () {
+    var tempFile, tester;
+
+    before(function (done) {
+      helper.createTemporaryFile(function (err, file) {
+        if (err) return done(err);
+        tempFile = file;
+        done();
+      });
+    });
+
+    after(function () {
+      tempFile && tempFile.cleanup();
+      tempFile = null;
+    });
+
+    it('should pass if the file exists', function (done) {
+      var tester = new FileTester(tempFile.relative, { checkRealFile: true });
+      tester.test(tempFile, done);
+    });
+
+    it('should fail if the file not exists', function (done) {
+      var tester = new FileTester('notexists.txt', { checkRealFile: true });
+      var file = createFile('nonexists.txt');
+      tester.test(file, done.expectFail('not exists on filesystem'));
     });
   });
 
