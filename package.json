@@ -1,0 +1,28 @@
+{
+  "name": "gulp-test-file",
+  "version": "0.0.1",
+  "author": "Kota Saito <kotas.nico@gmail.com>",
+  "copyright": "2014 Kota Saito",
+  "description": "Test files in pipes for gulp.js",
+  "license": "MIT",
+  "homepage": "https://github.com/kotas/gulp-test-file/",
+  "bugs": "https://github.com/kotas/gulp-test-file/issues",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kotas/gulp-test-file.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gulpplugin",
+    "test"
+  ],
+  "dependencies": {
+    "through2": "~0.4.1",
+    "gulp-util": "~2.2.13",
+    "async": "~0.2.10",
+    "minimatch": "~0.2.14"
+  }
+}
