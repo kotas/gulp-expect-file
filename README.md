@@ -8,7 +8,7 @@ This plugin is intended for testing other gulp plugin.
 First, install `gulp-expect-file` as a development dependency:
 
 ```shell
-npm install --save-dev kotas/gulp-expect-file
+npm install --save-dev gulp-expect-file
 ```
 
 Then, add it to your `gulpfile.js`:
@@ -135,6 +135,10 @@ Type: `Boolean`
 Default: `false`
 
 If true, it reports files that passed the expectation.
+
+### expect.real([options,] expectation)
+
+This is just a shortcut for `expect({ checkRealFile: true }, expectation)`.
 
 
 [npm-url]: https://npmjs.org/package/gulp-expect-file
