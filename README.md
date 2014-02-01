@@ -2,7 +2,7 @@
 Under development (not on npm repository)
 ```
 
-# gulp-expect-file
+# gulp-expect-file [![Build Status](https://travis-ci.org/kotas/gulp-expect-file.png?branch=master)](https://travis-ci.org/kotas/gulp-expect-file)
 > Expectation on generated files for gulp 3
 
 This plugin is normally used for testing other gulp plugin.
