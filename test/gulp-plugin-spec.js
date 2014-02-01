@@ -56,4 +56,6 @@ describe('gulp-expect-file', function () {
 
   });
 
+  // TODO: tests with contents matcher
+
 });
