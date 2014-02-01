@@ -124,13 +124,13 @@ gulp.src(['a.txt'])
     .on('error', function (err) { console.error(err); })
 ```
 
-### options.silent
+#### options.silent
 Type: `Boolean`
 Default: `false`
 
 If true, it does not report any results.
 
-### options.verbose
+#### options.verbose
 Type: `Boolean`
 Default: `false`
 
