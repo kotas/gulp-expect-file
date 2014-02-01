@@ -80,24 +80,55 @@ describe('FileTester', function () {
       'bar.txt': /^hello/i,
     });
 
-    it('should pass if expected substring is in the contents', function (done) {
-      var file = createFile('foo.txt', 'Hello, world!');
-      tester.test(file, done);
+    context('when contents is Buffer', function () {
+      it('should pass if expected substring is in the contents', function (done) {
+        var file = createFile('foo.txt', 'Hello, world!');
+        tester.test(file, done);
+      });
+
+      it('should pass if expected RegExp pattern matches the contents', function (done) {
+        var file = createFile('bar.txt', 'Hello, world!');
+        tester.test(file, done);
+      });
+
+      it('should fail if expected substring not in the contents', function (done) {
+        var file = createFile('foo.txt', 'Hello, earth!');
+        tester.test(file, done.expectFail('not contain "world"'));
+      });
+
+      it('should fail if expected RegExp pattern not matches the contents', function (done) {
+        var file = createFile('bar.txt', 'Bye, world!');
+        tester.test(file, done.expectFail('not match against /^hello/i'));
+      });
     });
 
-    it('should pass if expected RegExp pattern matches the contents', function (done) {
-      var file = createFile('bar.txt', 'Hello, world!');
-      tester.test(file, done);
+    context('when contents is Stream', function () {
+      it('should pass if expected substring is in the contents', function (done) {
+        var file = createFile('foo.txt', ['Hel', 'lo, ', 'wor', 'ld!']);
+        tester.test(file, done);
+      });
+
+      it('should pass if expected RegExp pattern matches the contents', function (done) {
+        var file = createFile('bar.txt', ['Hel', 'lo, ', 'wor', 'ld!']);
+        tester.test(file, done);
+      });
+
+      it('should fail if expected substring not in the contents', function (done) {
+        var file = createFile('foo.txt', ['Hel', 'lo, ', 'ear', 'th!']);
+        tester.test(file, done.expectFail('not contain "world"'));
+      });
+
+      it('should fail if expected RegExp pattern not matches the contents', function (done) {
+        var file = createFile('bar.txt', ['Bye', ', ', 'wor', 'ld!']);
+        tester.test(file, done.expectFail('not match against /^hello/i'));
+      });
     });
 
-    it('should fail if expected substring not in the contents', function (done) {
-      var file = createFile('foo.txt', 'Hello, earth!');
-      tester.test(file, done.expectFail('not contain "world"'));
-    });
-
-    it('should fail if expected RegExp pattern not matches the contents', function (done) {
-      var file = createFile('bar.txt', 'Bye, world!');
-      tester.test(file, done.expectFail('not match against /^hello/i'));
+    context('when contents is null', function () {
+      it('should fail', function (done) {
+        var file = createFile('foo.txt');
+        tester.test(file, done.expectFail('The file is not read'));
+      });
     });
   });
 

@@ -39,6 +39,24 @@ describe('StringTester', function () {
     });
   });
 
+  context('with an asynchronous function', function () {
+    var tester = new StringTester(function checkFoo(s, callback) {
+      if (s === 'foo') {
+        callback();
+      } else {
+        callback(new Error('not foo'));
+      }
+    });
+
+    it('should pass if the function called back without errors', function (done) {
+      tester.test('foo', done);
+    });
+
+    it('should fail if the function called back with errors', function (done) {
+      tester.test('foobar', done.expectFail('not foo'));
+    });
+  });
+
   context('with an array of strings', function () {
     var tester = new StringTester(['foo', 'baz']);
 

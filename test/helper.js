@@ -1,6 +1,7 @@
 var gutil = require('gulp-util');
 var temp = require('temp');
 var path = require('path');
+var es = require('event-stream');
 
 module.exports.should = require('should');
 
@@ -33,6 +34,9 @@ Function.prototype.expectFail = function (expectedError) {
 module.exports.createFile = function (relpath, contents) {
   if (typeof contents === 'string') {
     contents = new Buffer(contents);
+  }
+  if (contents instanceof Array) {
+    contents = es.readArray(contents);
   }
   return new gutil.File({
     cwd: '/test/',

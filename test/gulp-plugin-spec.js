@@ -26,8 +26,9 @@ describe('gulp-expect-file', function () {
       gutil.log.capture(function (next) {
         var stream = expect(['foo.txt', 'bar.txt']);
         testStream(stream, function (error, files) {
+          if (error) return next(error);
           files.should.have.length(2);
-          next(error);
+          next();
         });
         stream.write(createFile('foo.txt'));
         stream.write(createFile('bar.txt'));
@@ -56,6 +57,30 @@ describe('gulp-expect-file', function () {
 
   });
 
-  // TODO: tests with contents matcher
+  context('with contents matcher', function () {
+
+    it('tests file contents matches expectation', function (done) {
+      gutil.log.capture(function (next) {
+        var stream = expect({
+          'foo.txt': 'world',
+          'bar.txt': /^hello/i,
+        });
+        testStream(stream, next);
+        stream.write(createFile('foo.txt', 'Hello, world!'));
+        stream.write(createFile('bar.txt', 'Hello, earth!'));
+        stream.end();
+      }, done);
+    });
+
+    it('fails if file contents not matching expectation', function (done) {
+      gutil.log.capture(function (next) {
+        var stream = expect({ 'foo.txt': 'world' });
+        testStream(stream, next);
+        stream.write(createFile('foo.txt', 'Hello, earth!'));
+        stream.end();
+      }, done.expectFail(/foo\.txt not contain "world"/));
+    });
+
+  });
 
 });
