@@ -1,4 +1,4 @@
-# gulp-expect-file [![Build Status](https://travis-ci.org/kotas/gulp-expect-file.png?branch=master)](https://travis-ci.org/kotas/gulp-expect-file)
+# gulp-expect-file [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 > Expectation on generated files for gulp 3
 
 This plugin is intended for testing other gulp plugin.
@@ -135,3 +135,11 @@ Type: `Boolean`
 Default: `false`
 
 If true, it reports files that passed the expectation.
+
+
+[npm-url]: https://npmjs.org/package/gulp-expect-file
+[npm-image]: https://badge.fury.io/js/gulp-expect-file.png
+[travis-url]: https://travis-ci.org/kotas/gulp-expect-file
+[travis-image]: https://travis-ci.org/kotas/gulp-expect-file.png?branch=master
+[daviddm-url]: https://david-dm.org/kotas/gulp-expect-file
+[daviddm-image]: https://david-dm.org/kotas/gulp-expect-file.png?theme=shields.io
