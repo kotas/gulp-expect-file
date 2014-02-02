@@ -65,6 +65,23 @@ describe('gulp-expect-file', function () {
     });
   });
 
+  context('with empty array', function () {
+    it('tests no files in stream', function (done) {
+      gutil.log.expect(/PASS/);
+      var stream = expect([]);
+      testStream(stream, done);
+      stream.end();
+    });
+
+    it('fails if any file is in stream', function (done) {
+      gutil.log.expect(/FAIL: foo\.txt is unexpected/);
+      var stream = expect([]);
+      testStream(stream, done);
+      stream.write(createFile('foo.txt'));
+      stream.end();
+    });
+  });
+
   context('with { reportUnexpected: true }', function () {
     it('should report unexpected files', function (done) {
       gutil.log.expect(/FAIL: bar\.txt is unexpected/);
@@ -169,6 +186,13 @@ describe('gulp-expect-file', function () {
       var stream = expect.real(['nonexists.txt']);
       testStream(stream, done);
       stream.write(createFile('nonexists.txt'));
+      stream.end();
+    });
+
+    it('passes with no files', function (done) {
+      gutil.log.expect(/PASS/);
+      var stream = expect.real([]);
+      testStream(stream, done);
       stream.end();
     });
   });

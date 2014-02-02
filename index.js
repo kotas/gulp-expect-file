@@ -45,13 +45,12 @@ function expect(options, expectation) {
   var numTests = 0, numPasses = 0, numFailures = 0;
 
   function eachFile(file, encoding, done) {
-    var originalFile = file;
-
-    numTests++;
-
     // To fix relative path to be based on cwd (where gulpfile.js exists)
+    var originalFile = file;
     file = originalFile.clone();
     file.base = file.cwd;
+
+    numTests++;
 
     var _this = this;
     fileTester.test(file, function (err) {

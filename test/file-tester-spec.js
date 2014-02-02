@@ -52,6 +52,15 @@ describe('FileTester', function () {
     });
   });
 
+  context('with an empty array', function () {
+    var tester = new FileTester([]);
+
+    it('should always fail as unexpected', function (done) {
+      var file = createFile('foo.txt');
+      tester.test(file, done.expectFail('unexpected'));
+    });
+  });
+
   context('with a hash of file name key and true', function () {
     var tester = new FileTester({
       'foo.txt': true,
@@ -154,7 +163,7 @@ describe('FileTester', function () {
     });
 
     it('should fail if the file not exists', function (done) {
-      var tester = new FileTester('notexists.txt', { checkRealFile: true });
+      var tester = new FileTester('nonexists.txt', { checkRealFile: true });
       var file = createFile('nonexists.txt');
       tester.test(file, done.expectFail('not on filesystem'));
     });
