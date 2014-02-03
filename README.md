@@ -3,6 +3,8 @@
 
 This plugin is intended for testing other gulp plugin.
 
+![Screen Shot](http://kotas.github.io/gulp-expect-file/screenshot.png)
+
 ## Usage
 
 First, install `gulp-expect-file` as a development dependency:
