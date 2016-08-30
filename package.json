@@ -25,7 +25,7 @@
     "gulp-util": "^3.0.7",
     "async": "^2.0.1",
     "minimatch": "^3.0.3",
-    "xtend": "^3.0.0"
+    "xtend": "^4.0.1"
   },
   "devDependencies": {
     "mocha": "^3.0.2",
