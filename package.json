@@ -28,7 +28,7 @@
     "xtend": "^3.0.0"
   },
   "devDependencies": {
-    "mocha": "^1.20.1",
+    "mocha": "^3.0.2",
     "should": "^3.3.2",
     "temp": "^0.7.0",
     "event-stream": "^3.1.5"
