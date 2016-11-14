@@ -126,11 +126,29 @@ gulp.src(['a.txt'])
     .on('error', function (err) { console.error(err); })
 ```
 
+#### options.hideSummary
+
+Type: `Boolean`
+Default: `false`
+
+If true, the summary log is hidden.
+
 #### options.silent
 Type: `Boolean`
 Default: `false`
 
 If true, it does not report any results.
+
+#### options.summaryCallback
+
+Type: `function`
+Default: `null`
+
+You can pass a callback here that is called when the summary is available. Example:
+
+    function (numTests, numPasses, numFailures) {
+        // Do something with this data
+    };
 
 #### options.verbose
 Type: `Boolean`
