@@ -138,7 +138,7 @@ function expect(options, expectation) {
       options.summaryCallback(numTests, numPasses, numFailures);
     }
 
-    options.silent || gutil.log(
+    options.silent || options.hideSummary || gutil.log(
       'Tested',
       color.cyan(numTests), 'tests,',
       color.cyan(numPasses), 'passes,',
