@@ -134,7 +134,11 @@ function expect(options, expectation) {
   }
 
   function reportSummary() {
-    options.silent || gutil.log(
+    if (options.summaryCallback) {
+      options.summaryCallback(numTests, numPasses, numFailures);
+    }
+
+    options.silent || options.hideSummary || gutil.log(
       'Tested',
       color.cyan(numTests), 'tests,',
       color.cyan(numPasses), 'passes,',
