@@ -2,10 +2,10 @@
 
 var FileTester = require('./lib/file-tester');
 var ExpectationError = require('./lib/errors').ExpectationError;
-var gutil = require('gulp-util');
 var through = require('through2');
 var xtend = require('xtend');
-var color = gutil.colors;
+var log = require('fancy-log');
+var color = require('chalk');
 
 module.exports = expect;
 
@@ -24,7 +24,7 @@ function expect(options, expectation) {
     options = {};
   }
   if (!expectation) {
-    throw new gutil.PluginError('gulp-expect-file', 'Expectation required');
+    throw new Error('gulp-expect-file: Expectation required');
   }
 
   options = xtend({
@@ -39,7 +39,7 @@ function expect(options, expectation) {
   try {
     var fileTester = new FileTester(expectation, options);
   } catch (e) {
-    throw new gutil.PluginError('gulp-expect-file', e.message || e);
+    throw new Error('gulp-expect-file: ' + e.message || e);
   }
 
   var numTests = 0, numPasses = 0, numFailures = 0;
@@ -87,7 +87,7 @@ function expect(options, expectation) {
     reportSummary();
 
     if (numFailures > 0 && options.errorOnFailure) {
-      this.emit('error', new gutil.PluginError('gulp-expect-file', 'Failed ' + numFailures + ' expectations'));
+      this.emit('error', new Error('gulp-expect-file: Failed ' + numFailures + ' expectations'));
     }
 
     numTests = numPasses = numFailures = 0;
@@ -96,14 +96,14 @@ function expect(options, expectation) {
 
   function reportFailure(file, err) {
     if (err instanceof ExpectationError) {
-      options.silent || gutil.log(
+      options.silent || log(
         color.red("\u2717 FAIL:"),
         color.magenta(file.relative),
         'is',
         err.message
       );
     } else {
-      options.silent || gutil.log(
+      options.silent || log(
         color.red("\u2717 ERROR:"),
         color.magenta(file.relative) + ':',
         (err.message || err)
@@ -113,7 +113,7 @@ function expect(options, expectation) {
 
   function reportPassing(file) {
     if (options.verbose && !options.silent) {
-      gutil.log(
+      log(
         color.green("\u2713 PASS:"),
         color.magenta(file.relative)
       );
@@ -123,7 +123,7 @@ function expect(options, expectation) {
   function reportMissing(rules) {
     var missings = rules.map(function (r) { return r.toString() }).join(', ');
     if (!options.silent) {
-      gutil.log(
+      log(
         color.red("\u2717 FAIL:"),
         'Missing',
         color.cyan(rules.length),
@@ -134,7 +134,7 @@ function expect(options, expectation) {
   }
 
   function reportSummary() {
-    options.silent || gutil.log(
+    options.silent || log(
       'Tested',
       color.cyan(numTests), 'tests,',
       color.cyan(numPasses), 'passes,',

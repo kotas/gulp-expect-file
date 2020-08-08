@@ -1,4 +1,3 @@
-var helper = require('./helper');
 var StringTester = require('../lib/string-tester');
 
 describe('StringTester', function () {
