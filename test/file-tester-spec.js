@@ -1,7 +1,6 @@
 var helper = require('./helper');
 var createFile = helper.createFile;
 var FileTester = require('../lib/file-tester');
-var gutil = require('gulp-util');
 
 describe('FileTester', function () {
 
@@ -142,7 +141,7 @@ describe('FileTester', function () {
   });
 
   context('with checking real file', function () {
-    var tempFile, tester;
+    var tempFile;
 
     before(function (done) {
       helper.createTemporaryFile(function (err, file) {
